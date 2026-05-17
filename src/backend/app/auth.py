@@ -51,7 +51,7 @@ def create_access_token(data: dict):
     "exp": expire
   })
 
-  return jwt.decode(
+  return jwt.encode(
     payload,
     SECRET_KEY,
     algorithm=ALGORITHM

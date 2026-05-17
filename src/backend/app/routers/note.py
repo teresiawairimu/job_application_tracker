@@ -31,7 +31,7 @@ def get_notes(application_id: int, db: Session = Depends(get_db), current_user: 
   if not application:
     raise HTTPException(status_code=404, detail="Application not found")
   
-  return db.query(Note).filter(Note.application == application_id).all()
+  return db.query(Note).filter(Note.application_id == application_id).all()
 
 @router.put("/notes/{note_id}", response_model=NoteResponse)
 def update_note(note_id: int, note_update: NoteUpdate, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):

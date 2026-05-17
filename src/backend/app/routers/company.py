@@ -8,16 +8,6 @@ from app.schemas.company import CompanyCreate, CompanyResponse, CompanyUpdate
 router = APIRouter(prefix="/companies", tags=["companies"])
 
 
-@router.post("/", response_model=CompanyResponse)
-def create_company(company: CompanyCreate, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
-  
-  db_company = Company(**company.model_dump())
-  db.add(db_company)
-  db.commit()
-  db.refresh(db_company)
-  return db_company
-
-
 @router.get("/", response_model=list[CompanyResponse])
 def get_companies(db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
   return db.query(Company).all()
@@ -28,7 +18,7 @@ def get_company(company_id: int, db: Session = Depends(get_db), current_user: Us
   company = db.query(Company).filter(Company.id == company_id).first()
 
   if not company:
-    raise HTTPException(status=404, detail="Company not found")
+    raise HTTPException(status_code=404, detail="Company not found")
   
   return company
 
@@ -38,7 +28,7 @@ def update_company(company_id: int, company_data: CompanyUpdate, db: Session = D
   company = db.query(Company).filter(Company.id == company_id).first()
 
   if not company:
-    raise HTTPException(status=404, details="Company not found")
+    raise HTTPException(status_code=404, details="Company not found")
   
   update_data = company_data.model_dump(exclude_unset=True)
 
@@ -50,15 +40,3 @@ def update_company(company_id: int, company_data: CompanyUpdate, db: Session = D
   
   return company
 
-@router.delete("/{company_id}", status_code=status.HTTP_204_NO_CONTENT)
-def delete_company(company_id: int, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
-
-  company = db.query(Company).filter(Company.id == company_id).first()
-
-  if not company:
-    raise HTTPException(status=404, details="Company not found")
-  
-  db.delete(company)
-  db.commit()
-
-  return None

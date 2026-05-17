@@ -1,4 +1,5 @@
 from sqlalchemy import Column, Integer, String
+from sqlalchemy.orm import relationship
 from app.database import Base
 
 class User(Base):
@@ -8,3 +9,4 @@ class User(Base):
   name = Column(String, nullable=False)
   email = Column(String, unique=True, nullable=False)
   hashed_password = Column(String, nullable=False)
+  applications = relationship("Application", back_populates="user")
