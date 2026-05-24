@@ -3,10 +3,10 @@ import os
 from  datetime import datetime, timedelta, timezone
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
-from passlib.context import CryptContext
+from pwdlib import PasswordHash
 from dotenv import load_dotenv
 from sqlalchemy.orm import Session
-from app.database import SessionLocal
+from app.database import get_db
 from app.models.user import User
 from typing import Annotated
 from jwt.exceptions import InvalidTokenError
@@ -19,19 +19,9 @@ ACCESS_TOKEN_EXPIRE_MINUTES = int(
   os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES")
 )
 
-pwd_context = CryptContext(
-  schemes=["argon2"],
-  deprecated="auto"
-)
+pwd_context = PasswordHash.recommended()
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/login")
-
-def get_db():
-  db = SessionLocal()
-  try:
-    yield db
-  finally:
-    db.close()
 
 
 def hash_password(password: str) -> str:

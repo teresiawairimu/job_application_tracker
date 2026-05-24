@@ -10,6 +10,7 @@ class Application(Base):
   id = Column(Integer, primary_key=True, index=True)
   user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
   company_id = Column(Integer, ForeignKey("companies.id"), nullable=False)
+  company_name = Column(String, nullable=True)
   role_title = Column(String, nullable=False)
   status = Column(String, nullable=False)
   job_link = Column(String, nullable=True)

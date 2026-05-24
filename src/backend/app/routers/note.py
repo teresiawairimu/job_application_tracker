@@ -1,12 +1,13 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-from app.auth import get_current_user, get_db
+from app.auth import get_current_user
+from app.database import get_db
 from app.models.application import Application
 from app.models.note import Note
 from app.models.user import User
 from app.schemas.note import NoteCreate, NoteResponse, NoteUpdate
 
-router = APIRouter(prefix="/notes", tags=["notes"])
+router = APIRouter(tags=["notes"])
 
 
 @router.post("/applications/{application_id}/notes", response_model=NoteResponse)
@@ -24,7 +25,7 @@ def create_note(application_id: int, note: NoteCreate, db: Session = Depends(get
   db.refresh(db_note)
   return db_note
 
-@router.get("/applications/{application_id/notes", response_model=list[NoteResponse])
+@router.get("/applications/{application_id}/notes", response_model=list[NoteResponse])
 def get_notes(application_id: int, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
   application = db.query(Application).filter(Application.id == application_id, Application.user_id == current_user.id).first()
 

@@ -1,4 +1,4 @@
-from pydantic import BaseModel, field_validator
+from pydantic import BaseModel, field_validator, ConfigDict
 from enum import Enum
 from datetime import date, datetime
 from typing import Optional
@@ -60,6 +60,8 @@ class ApplicationUpdate(BaseModel):
     return value
 
 class ApplicationResponse(BaseModel):
+  model_config = ConfigDict(from_attributes=True)
+
   id: int
   user_id: int
   company_id: int
@@ -72,7 +74,4 @@ class ApplicationResponse(BaseModel):
   follow_up_date: Optional[date] = None
   created_at: datetime
   updated_at: Optional[datetime] = None
-
-  class Config:
-    from_attributes = True
 
