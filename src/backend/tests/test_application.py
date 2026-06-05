@@ -1,5 +1,11 @@
+from datetime import date, timedelta
+
+
+VALID_FOLLOW_UP_DATE= (date.today() + timedelta(days=7)).isoformat()
 
 def test_user_can_create_application(client):
+  
+
   response = client.post("/applications/", json={
     "company_name": "Google",
     "role_title": "Backend Developer",
@@ -7,13 +13,17 @@ def test_user_can_create_application(client):
     "job_link": "https://example.com/job",
     "salary_range": 100000,
     "applied_date": "2026-05-22",
-    "follow_up_date": "2026-05-29"
+    "follow_up_date": VALID_FOLLOW_UP_DATE
   })
+
+  print(response.status_code)
+  print(response.json())
 
   assert response.status_code == 200 or response.status_code == 201
   data = response.json()
   assert data["role_title"] =="Backend Developer"
   assert data["status"] == "applied"
+
 
 def test_user_can_get_applications(client):
   client.post("/applications/", json={
@@ -23,7 +33,7 @@ def test_user_can_get_applications(client):
     "job_link": "https://example.com/job",
     "salary_range": 100000,
     "applied_date": "2026-05-22",
-    "follow_up_date": "2026-05-29"
+    "follow_up_date": VALID_FOLLOW_UP_DATE
   })
 
   response = client.get("/applications/")
@@ -41,7 +51,7 @@ def test_user_can_get_single_application(client):
     "job_link": "https://example.com/job",
     "salary_range": 100000,
     "applied_date": "2026-05-22",
-    "follow_up_date": "2026-05-29"
+    "follow_up_date": VALID_FOLLOW_UP_DATE
   })
 
   application_id = create_response.json()["id"]
@@ -59,7 +69,7 @@ def test_user_can_update_application(client):
     "job_link": "https://example.com/job",
     "salary_range": 100000,
     "applied_date": "2026-05-22",
-    "follow_up_date": "2026-05-29"
+    "follow_up_date": VALID_FOLLOW_UP_DATE
   })
 
   application_id = create_response.json()["id"]
@@ -71,7 +81,7 @@ def test_user_can_update_application(client):
     "job_link": "https://example.com/job",
     "salary_range": 120000,
     "applied_date": "2026-05-22",
-    "follow_up_date": "2026-05-30"
+    "follow_up_date": VALID_FOLLOW_UP_DATE
   })
 
   assert response.status_code == 200
@@ -87,7 +97,7 @@ def test_user_can_delete_application(client):
     "job_link": "https://example.com/job",
     "salary_range": 100000,
     "applied_date": "2026-05-22",
-    "follow_up_date": "2026-05-29"
+    "follow_up_date": VALID_FOLLOW_UP_DATE
   })
 
   application_id = create_response.json()["id"]
