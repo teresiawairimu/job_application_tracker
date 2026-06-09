@@ -4,6 +4,7 @@ from app.database import Base, engine
 from app.models.user import User
 from app.routers import auth, application, company, note, user
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import RedirectResponse
 
 #Base.metadata.create_all(bind=engine)
 
@@ -32,4 +33,7 @@ app.include_router(user.router)
 def health_check():
   return {"status": "ok"}
 
+@app.get("/", include_in_schema=False)
+def root():
+  return RedirectResponse(url="/docs")
 
